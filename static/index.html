@@ -1,0 +1,20 @@
+<!-- static/index.html -->
+<!DOCTYPE html>
+<html>
+<head>
+  <title>FastAPI Static Test</title>
+</head>
+<body>
+  <h1>Hello from FastAPI Static UI</h1>
+  <button onclick="callApi()">Call FastAPI</button>
+  <pre id="output"></pre>
+
+  <script>
+    async function callApi() {
+      const response = await fetch('/title/better than the movies');
+      const data = await response.json();
+      document.getElementById('output').innerText = JSON.stringify(data, null, 2);
+    }
+  </script>
+</body>
+</html>
