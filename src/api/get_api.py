@@ -10,24 +10,20 @@ class HelloBookWorms(GetBooksInfo):
         self.url=''
         print('initializing the book api')
         return 
-
-    def get_bestsellers(self,limit=10)->BooksJson:
-        # print(f'getting top {limit} best selling books')
-        # response=best_selling_books(type=2,limit=limit)
-        # print(f'fetched top {limit} best selling books')
-        # return BooksJson(response['items']).get_books()
-        pass
-
     
-    def get_new_releases_by_year_or_month(self,year=datetime.now().year,month=datetime.now().month,limit=10)->BooksJson:
-        # print(f'getting new release as per {year} and {month}')
-        # response=best_selling_books(type=1,limit=limit,meta_data={'year':year,'month':month})
-        # print(f'Books fetched')
-        # return BooksJson(response['items']).get_books()
-        pass
+    async def get_bestsellers(self,genre='fiction',limit=100)->BooksJson:
+        print(f'getting top {limit} best selling books')
+        response=best_selling_books(baseURL=self.baseurl,urlType=1,genre=genre,limit=limit)
+        print(f'fetched top {limit} best selling books')
+        print("response",response)
+        return response
+
+    def get_new_releases_by_year_or_month(self,year=datetime.now().year,month=datetime.now().month,limit=100)->BooksJson:
+        print(f'getting new release as per {year} and {month}')
+        response=best_selling_books(baseURL=self.baseurl,urlType=2,limit=limit,metadata={'year':year,'month':month})
+        print(f'Books fetched')
+        return response
         
-
-
     def get_by_title(self,title_name)->BooksJson:
         print(self.url)
         self.url=self.baseurl+f'/books/v1/volumes?q=intitle:"{title_name}"'
@@ -35,8 +31,6 @@ class HelloBookWorms(GetBooksInfo):
         response= requests.get(self.url).json()
         print(f'book fetched with title name {title_name}')
         return BooksJson(response['items']).get_books()
-
-
 
     def get_author(self,author_name)->BooksJson:
         print(self.url)
@@ -56,6 +50,9 @@ class HelloBookWorms(GetBooksInfo):
         
 
     def get_reviews()->BooksJson:
+        pass
+
+    def reddit()->BooksJson:
         pass
         
         
