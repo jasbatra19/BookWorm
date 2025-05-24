@@ -1,3 +1,4 @@
+# establishing connection with reddit client
 import praw
 import os
 from dotenv import load_dotenv

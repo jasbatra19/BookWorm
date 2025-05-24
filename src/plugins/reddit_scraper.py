@@ -35,33 +35,4 @@ def get_reddit_recommendations():
     # most occurring ones return
     return preprocessed_books[0:50]
 
-  
-
-
-
 get_reddit_recommendations()
-    # nlp = spacy.load("en_core_web_sm")
-    # doc = nlp(post.selftext)
-
-    # for ent in doc.ents:
-    #     if ent.label_ == "WORK_OF_ART":
-    #         print("Book title maybe? 📖", ent.text)
-
-    # sentiment = TextBlob(post.selftext).sentiment.polarity
-    # if sentiment > 0:
-    #     print("Positive Post 🎉")
-    # elif sentiment < 0:
-    #     print("Negative Post 😒")
-    # else:
-    #     print("Neutral 😐")
-
-
-# post = reddit.submission(id="1jwm6vh")  # April 11, 2025 Weekly Thread
-
-# post.comments.replace_more(limit=None)  # Load all comments
-
-# for top_level_comment in post.comments:
-#     print("🔎 Request:", top_level_comment.body[:200])  # Trimmed preview
-#     for reply in top_level_comment.replies:
-#         print("📚 Suggestion:", reply.body[:200])  # Each suggestion
-#         print("-" * 40)

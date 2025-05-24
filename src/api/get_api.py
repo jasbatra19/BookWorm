@@ -48,7 +48,6 @@ class HelloBookWorms(GetBooksInfo):
         print(f'book fetched with {genre}')
         return BooksJson(response['items']).get_books()
         
-
     def get_reviews()->BooksJson:
         pass
 
