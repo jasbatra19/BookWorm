@@ -1,16 +1,21 @@
-from plugins.reddit.redditClient import RedditClient
+from src.plugins.reddit.redditClient import RedditClient
 from textblob import TextBlob
 import spacy
 import json
-from plugins.reddit.preprocessing import extract_books,clean_book_titles
+from src.plugins.reddit.tags import tags,search_criteria
+from src.plugins.reddit.preprocessing import extract_books,clean_book_titles
 
 
+MIN_SCORE = 10
 def get_reddit_recommendations():
     reddit=RedditClient()
-    subreddit = reddit.get_subreddit('suggestmeabook')  
-    top_posts = subreddit.search("recommended",sort='relevance',time_filter='month',limit=10)
+    subreddit = reddit.get_subreddit(tags)  
+    top_posts = subreddit.search(search_criteria,sort='hot',time_filter='day',limit=10)
     all_posts=[]
+    visited_posts_id=[] 
     for post in top_posts:
+        if(post.id in visited_posts_id or post.score < 10):
+            continue
         post_data = {
             "id": post.id,
             "title": post.title,
@@ -20,6 +25,7 @@ def get_reddit_recommendations():
             "content": post.selftext,
             "comments": [comment.body for comment in post.comments if hasattr(comment, "body")]
         }
+        
         all_posts.append(post_data)
 
     # Save to a JSON file

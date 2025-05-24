@@ -1,6 +1,6 @@
 from src.wrapper.get import GetBooksInfo
 import requests
-from plugins.reddit.scraper import best_selling_books
+from src.plugins.reddit.scraper import best_selling_books
 from src.plugins.responseJson import BooksJson
 from datetime import datetime
 
