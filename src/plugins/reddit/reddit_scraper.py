@@ -1,8 +1,8 @@
-from src.plugins.reddit import RedditClient
+from plugins.reddit.redditClient import RedditClient
 from textblob import TextBlob
 import spacy
 import json
-from src.plugins.spacy_reddit import extract_books,clean_book_titles
+from plugins.reddit.preprocessing import extract_books,clean_book_titles
 
 
 def get_reddit_recommendations():

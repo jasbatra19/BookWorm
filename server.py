@@ -3,7 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from src.api.get_api import HelloBookWorms
 from typing import Optional
 from datetime import datetime
-from src.plugins.reddit_scraper import get_reddit_recommendations
+from plugins.reddit.reddit_scraper import get_reddit_recommendations
 from src.database.bookStore import create_table,connect_db,insert_book,get_all_books,get_book_by_name
 
 app= FastAPI()
