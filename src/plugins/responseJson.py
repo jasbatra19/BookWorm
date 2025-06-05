@@ -4,9 +4,11 @@ class BooksJson:
     
     def _transform_book(self, book_dict):
         volume_info = book_dict.get('volumeInfo', {})
+        authors = volume_info.get('authors')
         return {
-            'title': volume_info.get('title'),
-            'author': volume_info.get('authors', [])[0] if volume_info.get('authors') else "Unknown",  # Taking first author
+            'bookId': book_dict.get('id', 'N/A'),
+            'title': volume_info.get('title', 'Untitled'),
+            'author': authors[0] if authors else 'Unknown',
             'description': volume_info.get('description', 'No description available'),
             'publishedDate': volume_info.get('publishedDate', 'N/A'),
             'pageCount': volume_info.get('pageCount', 0),
@@ -15,6 +17,7 @@ class BooksJson:
             'categories': volume_info.get('categories', []),
             'thumbnail': volume_info.get('imageLinks', {}).get('thumbnail', 'No image available'),
             'maturityRating': volume_info.get('maturityRating', 'N/A'),
+            'previewLink': volume_info.get('previewLink', ''),
         }
 
     def get_books(self):

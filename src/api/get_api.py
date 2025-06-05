@@ -3,7 +3,8 @@ import requests
 from src.plugins.reddit.scraper import best_selling_books
 from src.plugins.responseJson import BooksJson
 from datetime import datetime
-
+import httpx, asyncio
+import json
 class HelloBookWorms(GetBooksInfo):
     def __init__(self):
         self.baseurl='https://www.googleapis.com'
@@ -53,5 +54,24 @@ class HelloBookWorms(GetBooksInfo):
 
     def reddit()->BooksJson:
         pass
+
+    async def fetch_book_data(self, title: str, client: httpx.AsyncClient):
+        try:
+            res = await client.get(f"https://www.googleapis.com/books/v1/volumes?q=intitle:{title}")
+            res.raise_for_status()
+            return BooksJson(res.json().get("items", [])).get_books()
+        except Exception as e:
+            print(f"Failed to fetch {title}: {e}")
+            return None
+
+    async def batch_fetch_books(self, titles: list[str]):
+        async with httpx.AsyncClient() as client:
+            tasks = [self.fetch_book_data(t, client) for t in titles]
+            results = await asyncio.gather(*tasks)
+            with open("results.json", "w", encoding="utf-8") as f:
+                json.dump(results, f, ensure_ascii=False, indent=4)
+        return results
+
+
         
         

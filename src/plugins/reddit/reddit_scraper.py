@@ -4,18 +4,20 @@ import spacy
 import json
 from src.plugins.reddit.tags import tags,search_criteria
 from src.plugins.reddit.preprocessing import extract_books,clean_book_titles
+from src.database.bookStore import existing_ids,post_info,get_book_by_name,insert_book,updateBooksRecommendedPercentage
 
 
 MIN_SCORE = 10
 def get_reddit_recommendations():
     reddit=RedditClient()
     subreddit = reddit.get_subreddit(tags)  
-    top_posts = subreddit.search(search_criteria,sort='hot',time_filter='day',limit=10)
+    top_posts = subreddit.search(search_criteria,sort='hot',time_filter='day',limit=1)
     all_posts=[]
-    visited_posts_id=[] 
+    existing_id=[]
     for post in top_posts:
-        if(post.id in visited_posts_id or post.score < 10):
-            continue
+        # if(existing_ids(post.id)):
+            # existing_id.append(post.id)
+        #     continue
         post_data = {
             "id": post.id,
             "title": post.title,
@@ -25,7 +27,7 @@ def get_reddit_recommendations():
             "content": post.selftext,
             "comments": [comment.body for comment in post.comments if hasattr(comment, "body")]
         }
-        
+        # post_info(post_data)
         all_posts.append(post_data)
 
     # Save to a JSON file
@@ -35,10 +37,8 @@ def get_reddit_recommendations():
     with open("reddit_posts.json", "r", encoding="utf-8") as f:
         jsonData=json.load(f)
 
-    books=extract_books(jsonData)
+    books=extract_books(all_posts)
     preprocessed_books=clean_book_titles(books)
-    print(preprocessed_books[0:50])
-    # most occurring ones return
-    return preprocessed_books[0:50]
+    return preprocessed_books[:10]
 
-get_reddit_recommendations()
+# get_reddit_recommendations()
