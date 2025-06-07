@@ -15,9 +15,6 @@ def get_reddit_recommendations():
     all_posts=[]
     existing_id=[]
     for post in top_posts:
-        # if(existing_ids(post.id)):
-            # existing_id.append(post.id)
-        #     continue
         post_data = {
             "id": post.id,
             "title": post.title,
@@ -27,7 +24,6 @@ def get_reddit_recommendations():
             "content": post.selftext,
             "comments": [comment.body for comment in post.comments if hasattr(comment, "body")]
         }
-        # post_info(post_data)
         all_posts.append(post_data)
 
     # Save to a JSON file
@@ -38,7 +34,7 @@ def get_reddit_recommendations():
         jsonData=json.load(f)
 
     books=extract_books(all_posts)
-    preprocessed_books=clean_book_titles(books)
-    return preprocessed_books[:10]
+    postProcessedBooks=clean_book_titles(books)
+    return postProcessedBooks
 
 # get_reddit_recommendations()

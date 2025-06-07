@@ -118,7 +118,7 @@ def get_all_books():
 def get_book_by_ID(id):
     conn = connect_db()
     cursor = conn.cursor()
-    cursor.execute("SELECT * FROM books where bookId= ?",id)
+    cursor.execute("SELECT * FROM books where bookId= ?",(id,))
     rows = cursor.fetchall()
     conn.close()
     return rows
@@ -142,7 +142,7 @@ def updateBooksRecommendedPercentage(id):
     cursor.execute('''
     UPDATE books SET recommendedPercentage = COALESCE(recommendedPercentage, 0) + 1, dateOfProcessing = CURRENT_DATE
     WHERE bookId = ?
-''',id)
+''',(id,))
     print('book already exists in the database. recommendedPercentage of recommendation updated ')
 
     conn.commit()

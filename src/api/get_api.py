@@ -57,12 +57,18 @@ class HelloBookWorms(GetBooksInfo):
 
     async def fetch_book_data(self, title: str, client: httpx.AsyncClient):
         try:
-            res = await client.get(f"https://www.googleapis.com/books/v1/volumes?q=intitle:{title}")
+            self.url=self.baseurl+f'/books/v1/volumes?q=intitle:{title}'
+            print(self.url)
+            res= await client.get(self.url)
             res.raise_for_status()
-            return BooksJson(res.json().get("items", [])).get_books()
+            books = BooksJson(res.json().get("items", [])).get_books()
+            with open("results_fecth.json", "w", encoding="utf-8") as f:
+                json.dump(books, f, ensure_ascii=False, indent=4)
+            return books[0] if books else None
         except Exception as e:
             print(f"Failed to fetch {title}: {e}")
             return None
+
 
     async def batch_fetch_books(self, titles: list[str]):
         async with httpx.AsyncClient() as client:
