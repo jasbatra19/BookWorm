@@ -5,6 +5,9 @@ from src.plugins.responseJson import BooksJson
 from datetime import datetime
 import httpx, asyncio
 import json
+from src.plugins.reddit.reddit_scraper import get_reddit_recommendations
+from src.database.bookStore import *
+
 class HelloBookWorms(GetBooksInfo):
     def __init__(self):
         self.baseurl='https://www.googleapis.com'
@@ -79,5 +82,16 @@ class HelloBookWorms(GetBooksInfo):
         return results
 
 
-        
+    async def get_reddit_recommendations(self):
+        print('getting reddit recommended book')
+        books=get_reddit_recommendations()
+        booksBatch = await self.batch_fetch_books(books)
+        for book in booksBatch:
+            if book is None:
+                continue  # skip if book is None
+            if get_book_by_ID(book['bookId']):
+                updateBooksRecommendedPercentage(book['bookId'])
+            else:
+                insert_book(book)
+        return booksBatch
         

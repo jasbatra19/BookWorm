@@ -3,7 +3,6 @@ from fastapi.middleware.cors import CORSMiddleware
 from src.api.get_api import HelloBookWorms
 from typing import Optional
 from datetime import datetime
-from src.plugins.reddit.reddit_scraper import get_reddit_recommendations
 from src.database.bookStore import *
 
 app= FastAPI()
@@ -54,21 +53,8 @@ def get_bestSellers(top: Optional[int] = 10, year: Optional[int] = None, month: 
 
 @app.get('/reddit_recommendations')
 async def reddit_recommendation():
-    print('getting reddit recommended book')
-    books=get_reddit_recommendations()
-    booksBatch = await client.batch_fetch_books(books)
-    for book in booksBatch:
-        if book is None:
-            continue  # skip if book is None
-        if get_book_by_ID(book['bookId']):
-            updateBooksRecommendedPercentage(book['bookId'])
-        else:
-            insert_book(book)
-
+    booksBatch = await client.get_reddit_recommendations()
     return booksBatch
-
-
-
 
 @app.get('/getAllBooks')
 def get_books_from_db():

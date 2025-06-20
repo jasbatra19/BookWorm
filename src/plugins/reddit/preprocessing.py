@@ -6,7 +6,6 @@ nlp = spacy.load("en_core_web_sm")
 
 # Improved book regex pattern
 book_by_author_pattern = r'(?:["“\']?\*?)([A-Z][\w\s:\-,&]{3,})\s+by\s+([A-Z][a-zA-Z\.\'\-]+(?:\s+[A-Z][a-zA-Z\.\'\-]+)*)(?:\*?["”\']?)'
-
 def extract_books(Collection):
     content_books = []
     comment_books = []
@@ -44,7 +43,7 @@ def extract_books(Collection):
 
 def clean_book_titles(nested_list):
     cleaned_books = set()
-    split_pattern = r'\\n+|,|and|- |–|•|\||\.'
+    split_pattern = r'\\+|,|and|- |–|•|\||\.|\\n\\n|\\n'
     common_single_words = {
         "About", "Both", "Explains", "It'S", "The", "And", "But", "Or", "If", "Is", "In", "Of", "To", "On", "At"
     }
