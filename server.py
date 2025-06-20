@@ -1,11 +1,23 @@
 from fastapi import FastAPI,Query
+import uvicorn
+from contextlib import asynccontextmanager
 from fastapi.middleware.cors import CORSMiddleware
 from src.api.get_api import HelloBookWorms
 from typing import Optional
 from datetime import datetime
 from src.database.bookStore import *
 
-app= FastAPI()
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    create_table_books()
+    create_table_booksId()
+    create_junction_book_post_map()
+    yield
+
+app = FastAPI(lifespan=lifespan)
+
+
 origins = [
     "http://localhost:3002",  # React app running here
 ]
@@ -18,9 +30,6 @@ app.add_middleware(
     allow_headers=["*"],      # or restrict to specific headers
 )
 
-create_table_books()
-create_table_booksId()
-create_junction_book_post_map()
 
 client=HelloBookWorms()
 
@@ -61,5 +70,8 @@ def get_books_from_db():
     books=get_all_books()
     return books
 
+
+if __name__ == "__main__":
+    uvicorn.run("server:app", host="0.0.0.0", port=10000)
 
 
