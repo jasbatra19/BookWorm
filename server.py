@@ -6,6 +6,7 @@ from src.api.get_api import HelloBookWorms
 from typing import Optional
 from datetime import datetime
 from src.database.bookStore import *
+import os
 
 
 @asynccontextmanager
@@ -72,6 +73,7 @@ def get_books_from_db():
 
 
 if __name__ == "__main__":
-    uvicorn.run("server:app", host="0.0.0.0", port=10000)
+    port = int(os.environ.get("PORT", 8000))
+    uvicorn.run("server:app", host="0.0.0.0", port=port)
 
 
