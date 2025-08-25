@@ -34,39 +34,59 @@ app.add_middleware(
 
 client=HelloBookWorms()
 
-@app.get('/author/{author_name}')
-def get_author(author_name:str):
-    print('getting book by author name')
-    return client.get_author(author_name=author_name)
+@app.get('/books/search')
+def get_books(
+    author:Optional[str]=None,
+    title:Optional[str]=None,
+    genre:Optional[str]=None,
+    limit:Optional[int]=Query(default=None,gt=0),
+):
+    result = []
+    if author:
+        result+=client.get_author(author_name=author)
+    if title:
+        result+=client.get_by_title(title_name=title)
+    if genre:
+        result+=client.get_genre(genre=genre)
+    if limit:
+        if limit<len(result):
+            result = result[:limit]
+    return result
+
     
-@app.get('/title/{title}')
-def get_by_title(title:str):
-    print('getting book by title')
-    return client.get_by_title(title_name=title)
+# @app.get('/author/{author_name}')
+# def get_author(author_name:str):
+#     print('getting book by author name')
+#     return client.get_author(author_name=author_name)
+    
+# @app.get('/title/{title}')
+# def get_by_title(title:str):
+#     print('getting book by title')
+#     return client.get_by_title(title_name=title)
 
-@app.get('/genre/{genre}')
-def get_by_genre(genre:str):
-    print('getting book by genre')
-    return client.get_genre(genre=genre)
+# @app.get('/genre/{genre}')
+# def get_by_genre(genre:str):
+#     print('getting book by genre')
+#     return client.get_genre(genre=genre)
 
-@app.get('/bestseller/{top}')
-async def get_bestSellers(top:int):
-    print('getting topseller books')
-    return await client.get_bestsellers(limit=top)
+# @app.get('/bestseller')
+# async def get_bestSellers(top:int):
+#     print('getting topseller books')
+#     return await client.get_bestsellers(limit=top)
 
-@app.get('/newReleases')
-def get_bestSellers(top: Optional[int] = 10, year: Optional[int] = None, month: Optional[int] = None):
-    year = year if year is not None else datetime.now().year
-    month = month if month is not None else datetime.now().month
-    print('getting new releases')
-    return client.get_new_releases_by_year_or_month(limit=top, year=year, month=month)
+# @app.get('/newReleases')
+# def get_bestSellers(top: Optional[int] = 10, year: Optional[int] = None, month: Optional[int] = None):
+#     year = year if year is not None else datetime.now().year
+#     month = month if month is not None else datetime.now().month
+#     print('getting new releases')
+#     return client.get_new_releases_by_year_or_month(limit=top, year=year, month=month)
 
-@app.get('/reddit_recommendations')
+@app.get('/recommendations/reddit')
 async def reddit_recommendation():
     booksBatch = await client.get_reddit_recommendations()
     return booksBatch
 
-@app.get('/getAllBooks')
+@app.get('/books')
 def get_books_from_db():
     books=get_all_books()
     return books
