@@ -5,18 +5,16 @@ from fastapi.middleware.cors import CORSMiddleware
 from src.api.get_api import HelloBookWorms
 from typing import Optional
 from datetime import datetime
-from src.database.bookStore import *
+from src.database.db_conn import *
 import os
 
 
-@asynccontextmanager
-async def lifespan(app: FastAPI):
-    create_table_books()
-    create_table_booksId()
-    create_junction_book_post_map()
-    yield
 
-app = FastAPI(lifespan=lifespan)
+app = FastAPI(
+    title="BookWorm API",
+    description="API for discovering books through Reddit discussions and Google Books",
+    version="1.0.0"
+)
 
 
 origins = [
@@ -33,6 +31,11 @@ app.add_middleware(
 
 
 client=HelloBookWorms()
+
+
+@app.get('/')
+def root():
+    return {"message":"API is running fine. :)", "status":"200"}
 
 @app.get('/books/search')
 def get_books(
@@ -54,34 +57,8 @@ def get_books(
     return result
 
     
-# @app.get('/author/{author_name}')
-# def get_author(author_name:str):
-#     print('getting book by author name')
-#     return client.get_author(author_name=author_name)
-    
-# @app.get('/title/{title}')
-# def get_by_title(title:str):
-#     print('getting book by title')
-#     return client.get_by_title(title_name=title)
 
-# @app.get('/genre/{genre}')
-# def get_by_genre(genre:str):
-#     print('getting book by genre')
-#     return client.get_genre(genre=genre)
-
-# @app.get('/bestseller')
-# async def get_bestSellers(top:int):
-#     print('getting topseller books')
-#     return await client.get_bestsellers(limit=top)
-
-# @app.get('/newReleases')
-# def get_bestSellers(top: Optional[int] = 10, year: Optional[int] = None, month: Optional[int] = None):
-#     year = year if year is not None else datetime.now().year
-#     month = month if month is not None else datetime.now().month
-#     print('getting new releases')
-#     return client.get_new_releases_by_year_or_month(limit=top, year=year, month=month)
-
-@app.get('/recommendations/reddit')
+@app.get('/recommendationsreddit')
 async def reddit_recommendation():
     booksBatch = await client.get_reddit_recommendations()
     return booksBatch
