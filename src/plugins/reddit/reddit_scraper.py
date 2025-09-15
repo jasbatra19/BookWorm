@@ -10,7 +10,7 @@ MIN_SCORE = 10
 def get_reddit_recommendations():
     reddit=RedditClient()
     subreddit = reddit.get_subreddit(tags)  
-    top_posts = subreddit.search(search_criteria,sort='hot',time_filter='day',limit=10)
+    top_posts = subreddit.search(search_criteria,sort='hot',time_filter='day',limit=1000)
     all_posts=[]
     for post in top_posts:
         post_data = {
@@ -22,7 +22,7 @@ def get_reddit_recommendations():
             "content": post.selftext,
             "comments": [comment.body for comment in post.comments if hasattr(comment, "body")]
         }
-        if(post_data['score']>10):
+        if(post_data['num_comments']>MIN_SCORE):
             all_posts.append(post_data)
 
     # Save to a JSON file
@@ -32,4 +32,3 @@ def get_reddit_recommendations():
     books=extract_books(all_posts)
     postProcessedBooks=clean_book_titles(books)
     return postProcessedBooks
-

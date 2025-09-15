@@ -6,7 +6,7 @@ from datetime import datetime
 import httpx, asyncio
 import json
 from src.plugins.reddit.reddit_scraper import get_reddit_recommendations
-from src.database.bookStore import *
+from src.database.db_conn import *
 
 class HelloBookWorms(GetBooksInfo):
     def __init__(self):
@@ -88,10 +88,7 @@ class HelloBookWorms(GetBooksInfo):
         booksBatch = await self.batch_fetch_books(books)
         for book in booksBatch:
             if book is None:
-                continue  # skip if book is None
-            if get_book_by_ID(book['bookId']):
-                updateBooksRecommendedPercentage(book['bookId'])
-            else:
-                insert_book(book)
+                continue
+            insert_book(book)
         return booksBatch
         
