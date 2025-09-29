@@ -2,7 +2,10 @@ import spacy
 import re
 import json
 
-nlp = spacy.load("en_core_web_trf")
+def get_nlp():
+    if not hasattr(get_nlp, "nlp"):
+        get_nlp.nlp = spacy.load("en_core_web_trf")
+    return get_nlp.nlp
 
 # Improved book regex pattern
 book_by_author_pattern = r'(?:["“\']?\*?)([A-Z][\w\s:\-,&]{3,})\s+by\s+([A-Z][a-zA-Z\.\'\-]+(?:\s+[A-Z][a-zA-Z\.\'\-]+)*)(?:\*?["”\']?)'
@@ -11,6 +14,7 @@ def extract_books(Collection):
     comment_books = []
 
     for data in Collection:
+        nlp = get_nlp()
         # --- Content ---
         doc = nlp(data['content'])
         ner_titles = [ent.text for ent in doc.ents if ent.label_ == "WORK_OF_ART"]
