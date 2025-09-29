@@ -31,7 +31,7 @@ MarkupSafe==3.0.2
 mdurl==0.1.2
 murmurhash==1.0.12
 nltk==3.9.1
-numpy==2.2.4
+numpy==1.24.4
 packaging==24.2
 praw==7.8.1
 prawcore==2.4.0
