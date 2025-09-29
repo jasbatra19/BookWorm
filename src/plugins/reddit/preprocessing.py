@@ -2,7 +2,7 @@ import spacy
 import re
 import json
 
-nlp = spacy.load("en_core_web_sm")
+nlp = spacy.load("en_core_web_trf")
 
 # Improved book regex pattern
 book_by_author_pattern = r'(?:["“\']?\*?)([A-Z][\w\s:\-,&]{3,})\s+by\s+([A-Z][a-zA-Z\.\'\-]+(?:\s+[A-Z][a-zA-Z\.\'\-]+)*)(?:\*?["”\']?)'
