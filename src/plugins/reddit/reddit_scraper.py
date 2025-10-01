@@ -1,9 +1,7 @@
 from src.plugins.reddit.redditClient import RedditClient
-from textblob import TextBlob
-import spacy
 import json
 from src.plugins.reddit.tags import tags,search_criteria
-from src.plugins.reddit.preprocessing import extract_books,clean_book_titles
+from src.plugins.reddit.preprocessing import extract_books,clean_book_titles,extract_book_titles,extract
 
 
 MIN_SCORE = 10
@@ -26,9 +24,15 @@ def get_reddit_recommendations():
             all_posts.append(post_data)
 
     # Save to a JSON file
-    with open("reddit_posts.json", "w", encoding="utf-8") as f:
+    with open("extracts/reddit_posts.json", "w", encoding="utf-8") as f:
         json.dump(all_posts, f, ensure_ascii=False, indent=4)
-
-    books=extract_books(all_posts)
-    postProcessedBooks=clean_book_titles(books)
-    return postProcessedBooks
+    with open("extracts/reddit_posts.json", "r", encoding="utf-8") as f:
+        all_posts = json.load(f)
+    books=extract(all_posts)
+    print("Extracted Book Titles:")
+    print("=" * 50)
+    for i, title in enumerate(books, 1):
+        print(f"{i}. {title}")
+    return books
+        # postProcessedBooks=clean_book_titles(books)
+    # return postProcessedBooks
